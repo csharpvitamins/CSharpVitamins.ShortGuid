@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net40</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <RootNamespace>CSharpVitamins</RootNamespace>
     <Authors>Dave Transom</Authors>
@@ -12,8 +12,10 @@
     <PackageLicenseExpression></PackageLicenseExpression>
     <RepositoryUrl>https://github.com/csharpvitamins/csharpvitamins.shortguid/</RepositoryUrl>
     <PackageTags>Guid ShortGuid Identifiers Base64</PackageTags>
-    <PackageReleaseNotes>- 1.0.0 Initial release</PackageReleaseNotes>
+    <PackageReleaseNotes>- 1.0.1 Target netstandard2.0 and net40
+- 1.0.0 Initial release</PackageReleaseNotes>
     <Copyright>Copyright 2007</Copyright>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

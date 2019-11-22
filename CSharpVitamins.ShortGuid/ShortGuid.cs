@@ -163,6 +163,7 @@ namespace CSharpVitamins
             }
             catch
             {
+                guid = Guid.Empty;
                 return false;
             }
         }
