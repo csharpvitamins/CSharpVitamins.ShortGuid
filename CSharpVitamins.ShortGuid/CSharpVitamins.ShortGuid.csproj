@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <RootNamespace>CSharpVitamins</RootNamespace>
+    <Authors>Dave Transom</Authors>
+    <Company>CSharpVitamins</Company>
+    <Description>A convenience wrapper struct for dealing with URL-safe base64 encoded globally unique identifier (GUID), making a shorter string value (22 vs 36 characters long).</Description>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/csharpvitamins/csharpvitamins.shortguid/</PackageProjectUrl>
+    <PackageLicenseExpression></PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/csharpvitamins/csharpvitamins.shortguid/</RepositoryUrl>
+    <PackageTags>Guid ShortGuid Identifiers Base64</PackageTags>
+    <PackageReleaseNotes>- 1.0.0 Initial release</PackageReleaseNotes>
+    <Copyright>Copyright 2007</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>
