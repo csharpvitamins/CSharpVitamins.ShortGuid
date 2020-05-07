@@ -13,13 +13,13 @@ namespace CSharpVitamins
     [DebuggerDisplay("{Value}")]
     public struct ShortGuid
     {
-        private Guid underlyingGuid;
-        private string encodedString;
-
         /// <summary>
         /// A read-only instance of the ShortGuid struct whose value is guaranteed to be all zeroes.
         /// </summary>
         public static readonly ShortGuid Empty = new ShortGuid(Guid.Empty);
+        
+        Guid underlyingGuid;
+        string encodedString;
 
         /// <summary>
         /// Creates a new instance with the given Base64 encoded string.
