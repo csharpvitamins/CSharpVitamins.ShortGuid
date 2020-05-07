@@ -17,7 +17,7 @@ namespace CSharpVitamins
         /// A read-only instance of the ShortGuid struct whose value is guaranteed to be all zeroes.
         /// </summary>
         public static readonly ShortGuid Empty = new ShortGuid(Guid.Empty);
-        
+
         Guid underlyingGuid;
         string encodedString;
 
