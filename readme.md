@@ -114,3 +114,19 @@ if (sguid == "Xy0MVKupFES9NpmZ9TiHcw") {
   // logic if string and sguid are equal
 }
 ```
+
+
+---
+
+
+## Use within SQL
+
+`ShortGuid.sql` is also included in the project source files if you want to work with ShortGuids directly in SQL Server (SQL 2005+).
+
+```SQL
+SET @sguid = dbo.EncodeShortGuid(@myUniqueIdentifier)
+-- output 'Xy0MVKupFES9NpmZ9TiHcw'
+
+SET @guid = dbo.DecodeShortGuid(@myShortGuidValue)
+-- output 540c2d5f-a9ab-4414-bd36-9999f5388773
+```
