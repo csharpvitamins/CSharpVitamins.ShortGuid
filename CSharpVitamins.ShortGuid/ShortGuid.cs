@@ -4,17 +4,19 @@ using System.Diagnostics;
 namespace CSharpVitamins
 {
     /// <summary>
-    /// A convenience wrapper struct for dealing with URL-safe Base64 encoded globally unique identifier (GUID),
+    /// A convenience wrapper struct for dealing with URL-safe Base64 encoded globally unique identifiers (GUID),
     /// making a shorter string value (22 vs 36 characters long).
     /// </summary>
     /// <remarks>
-    /// URL-safe Base64? That's just a Base64 string with well known special characters replaced (/, +) or removed (==).
+    /// What is URL-safe Base64? That's just a Base64 string with well known special characters replaced (/, +)
+    /// or removed (==).
     /// </remarks>
     [DebuggerDisplay("{Value}")]
     public struct ShortGuid
     {
         /// <summary>
-        /// A read-only instance of the ShortGuid struct whose value is guaranteed to be all zeroes.
+        /// A read-only instance of the ShortGuid struct whose value is guaranteed to be all zeroes i.e. equivilent
+        /// to <see cref="Guid.Empty"/>.
         /// </summary>
         public static readonly ShortGuid Empty = new ShortGuid(Guid.Empty);
 
@@ -22,10 +24,11 @@ namespace CSharpVitamins
         string encodedString;
 
         /// <summary>
-        /// Creates a new instance with the given Base64 encoded string.
-        /// (See also <seealso cref="ShortGuid.TryParse(string, out ShortGuid)"/>)
+        /// Creates a new instance with the given URL-safe Base64 encoded string.
+        /// See also <seealso cref="ShortGuid.TryParse(string, out ShortGuid)"/> which will try to coerce the
+        /// the value from URL-safe Base64 or normal Guid string
         /// </summary>
-        /// <param name="value">A ShortGuid encoded string.</param>
+        /// <param name="value">A ShortGuid encoded string e.g. URL-safe Base64.</param>
         public ShortGuid(string value)
         {
             encodedString = value;
@@ -33,7 +36,7 @@ namespace CSharpVitamins
         }
 
         /// <summary>
-        /// Creates a new instance with the given Guid.
+        /// Creates a new instance with the given <see cref="Guid"/>.
         /// </summary>
         /// <param name="guid">The Guid to encode.</param>
         public ShortGuid(Guid guid)
@@ -43,17 +46,17 @@ namespace CSharpVitamins
         }
 
         /// <summary>
-        /// Gets the underlying Guid for the encoded ShortGuid.
+        /// Gets the underlying <see cref="Guid"/> for the encoded ShortGuid.
         /// </summary>
         public Guid Guid => underlyingGuid;
 
         /// <summary>
-        /// Gets the encoded string value of the Guid.
+        /// Gets the encoded string value of the <see cref="Guid"/> i.e. a URL-safe Base64 string.
         /// </summary>
         public string Value => encodedString;
 
         /// <summary>
-        /// Returns the encoded string value.
+        /// Returns the encoded URL-safe Base64 string.
         /// </summary>
         /// <returns></returns>
         public override string ToString() => encodedString;
@@ -91,7 +94,7 @@ namespace CSharpVitamins
         }
 
         /// <summary>
-        /// Returns the HashCode for the underlying Guid.
+        /// Returns the hash code for the underlying <see cref="Guid"/>.
         /// </summary>
         /// <returns></returns>
         public override int GetHashCode() => underlyingGuid.GetHashCode();
@@ -107,7 +110,7 @@ namespace CSharpVitamins
         /// Base64, with some non-URL safe characters replaced, and padding removed.
         /// </summary>
         /// <param name="value">Any valid <see cref="Guid"/> string.</param>
-        /// <returns>A 22 character ShortGuid string.</returns>
+        /// <returns>A 22 character ShortGuid URL-safe Base64 string.</returns>
         public static string Encode(string value)
         {
             var guid = new Guid(value);
@@ -119,7 +122,7 @@ namespace CSharpVitamins
         /// Base64, with some non-URL safe characters replaced, and padding removed.
         /// </summary>
         /// <param name="guid">The <see cref="Guid"/> to encode.</param>
-        /// <returns>A 22 character ShortGuid string.</returns>
+        /// <returns>A 22 character ShortGuid URL-safe Base64 string.</returns>
         public static string Encode(Guid guid)
         {
             string encoded = Convert.ToBase64String(guid.ToByteArray());
@@ -218,7 +221,7 @@ namespace CSharpVitamins
         public static implicit operator string(ShortGuid shortGuid) => shortGuid.encodedString;
 
         /// <summary>
-        /// Implicitly converts the ShortGuid to its Guid equivalent.
+        /// Implicitly converts the ShortGuid to its <see cref="Guid"/> equivalent.
         /// </summary>
         public static implicit operator Guid(ShortGuid shortGuid) => shortGuid.underlyingGuid;
 
@@ -233,11 +236,12 @@ namespace CSharpVitamins
             if (TryParse(value, out ShortGuid shortGuid))
                 return shortGuid;
 
-            throw new FormatException("ShortGuid should contain 22 Base64 characters or Guid should contain 32 digits with 4 dashes (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx).");
+            throw new FormatException("ShortGuid should contain 22 Base64 characters or "
+                + "Guid should contain 32 digits with 4 dashes (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx).");
         }
 
         /// <summary>
-        /// Implicitly converts the Guid to a ShortGuid.
+        /// Implicitly converts the <see cref="Guid"/> to a ShortGuid.
         /// </summary>
         public static implicit operator ShortGuid(Guid guid)
         {
@@ -250,7 +254,7 @@ namespace CSharpVitamins
         #endregion
 
         /// <summary>
-        /// Tries to parse the value as a ShortGuid or Guid string.
+        /// Tries to parse the value as a ShortGuid or <see cref="Guid"/> string.
         /// </summary>
         /// <param name="value">The ShortGuid encoded string or string representation of a Guid.</param>
         /// <param name="shortGuid">A new <see cref="ShortGuid"/> instance from the parsed string.</param>
@@ -276,7 +280,7 @@ namespace CSharpVitamins
         }
 
         /// <summary>
-        /// Tries to parse the value as a ShortGuid or Guid string, and outputs the underlying Guid value.
+        /// Tries to parse the value as a ShortGuid or <see cref="Guid"/> string, and outputs the underlying <see cref="Guid"/> value.
         /// </summary>
         /// <param name="value">The ShortGuid encoded string or string representation of a Guid.</param>
         /// <param name="guid">A new <see cref="Guid"/> instance from the parsed string.</param>

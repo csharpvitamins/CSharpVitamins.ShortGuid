@@ -6,16 +6,17 @@
     <RootNamespace>CSharpVitamins</RootNamespace>
     <Authors>Dave Transom</Authors>
     <Company>CSharpVitamins</Company>
-    <Description>A convenience wrapper struct for dealing with URL-safe base64 encoded globally unique identifier (GUID), making a shorter string value (22 vs 36 characters long).</Description>
+    <Description>A convenience wrapper struct for dealing with URL-safe Base64 encoded globally unique identifiers (GUID), making a shorter string value (22 vs 36 characters long).</Description>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/csharpvitamins/csharpvitamins.shortguid/</PackageProjectUrl>
     <PackageLicenseExpression></PackageLicenseExpression>
     <RepositoryUrl>https://github.com/csharpvitamins/csharpvitamins.shortguid/</RepositoryUrl>
     <PackageTags>Guid ShortGuid Identifiers Base64</PackageTags>
-    <PackageReleaseNotes>- 1.0.1 Target netstandard2.0 and net40
+    <PackageReleaseNotes>- 1.0.2 Fix: Ambiguous use of `==` operator when comparing Guid and ShortGuid instances
+- 1.0.1 Target netstandard2.0 and net40
 - 1.0.0 Initial release</PackageReleaseNotes>
     <Copyright>Copyright 2007</Copyright>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
