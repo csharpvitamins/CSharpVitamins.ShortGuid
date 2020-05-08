@@ -44,7 +44,7 @@ Console.WriteLine(sguid1.Guid);
 
 This produces a new guid, uses that guid to create a ShortGuid, and displays the two equivalent values in the console. Results would be something along the lines of:
 
-`FEx1sZbSD0ugmgMAF_RGHw`
+`FEx1sZbSD0ugmgMAF_RGHw`  
 `b1754c14-d296-4b0f-a09a-030017f4461f`
 
 Or you can implicitly cast a string to a ShortGuid as well.
@@ -63,7 +63,7 @@ Which produces the following:
 
 
 
-## Flexible with your other data types
+### Flexible with your other data types
 
 The ShortGuid is made to be easily used with the different types, so you can simplify your code. Take note of the following examples:
 
@@ -98,7 +98,7 @@ sguid.ToString(); // same as sguid.Value
 
 
 
-## Easy comparison with guids and strings
+### Easy comparison with guids and strings
 
 You can also do equals comparison against the three types, Guid, string and ShortGuid like in the following example:
 
@@ -106,9 +106,11 @@ You can also do equals comparison against the three types, Guid, string and Shor
 Guid myGuid = new Guid("540c2d5f-a9ab-4414-bd36-9999f5388773");
 ShortGuid sguid = (ShortGuid)"Xy0MVKupFES9NpmZ9TiHcw";
 
-if (sguid == myGuid)
-	// logic if guid and sguid are equal
+if (sguid == myGuid) {
+  // logic if guid and sguid are equal
+}
 
-if (sguid == "Xy0MVKupFES9NpmZ9TiHcw")
-	// logic if string and sguid are equal
+if (sguid == "Xy0MVKupFES9NpmZ9TiHcw") {
+  // logic if string and sguid are equal
+}
 ```
