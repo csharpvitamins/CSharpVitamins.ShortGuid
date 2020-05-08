@@ -123,8 +123,8 @@ namespace Tests
 
             Assert.False(actual == null);
 
-            // equality here makes an implicit cast leading to ambiguous call between Guid and ShortGuid == operator
-            Assert.True(actual == (ShortGuid)SampleGuid);
+            Assert.True(actual == SampleGuid);
+            Assert.True(SampleGuid == actual);
 
             Assert.True(actual == SampleGuidString);
             Assert.True(actual == SampleShortGuidString);

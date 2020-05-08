@@ -171,22 +171,46 @@ namespace CSharpVitamins
         #region Operators
 
         /// <summary>
-        /// Determines if both ShortGuids have the same underlying Guid value.
+        /// Determines if both ShortGuid instances have the same underlying <see cref="Guid"/> value.
         /// </summary>
         public static bool operator ==(ShortGuid x, ShortGuid y)
         {
             if (ReferenceEquals(x, null))
-            {
                 return ReferenceEquals(y, null);
-            }
 
             return x.underlyingGuid == y.underlyingGuid;
         }
 
         /// <summary>
-        /// Determines if both ShortGuids do not have the same underlying Guid value.
+        /// Determines if both instances have the same underlying <see cref="Guid"/> value.
+        /// </summary>
+        public static bool operator ==(ShortGuid x, Guid y)
+        {
+            if (ReferenceEquals(x, null))
+                return ReferenceEquals(y, null);
+
+            return x.underlyingGuid == y;
+        }
+
+        /// <summary>
+        /// Determines if both instances have the same underlying <see cref="Guid"/> value.
+        /// </summary>
+        public static bool operator ==(Guid x, ShortGuid y) => y == x; // NB: order of arguments
+
+        /// <summary>
+        /// Determines if both ShortGuid instances do not have the same underlying <see cref="Guid"/> value.
         /// </summary>
         public static bool operator !=(ShortGuid x, ShortGuid y) => !(x == y);
+
+        /// <summary>
+        /// Determines if both instances do not have the same underlying <see cref="Guid"/> value.
+        /// </summary>
+        public static bool operator !=(ShortGuid x, Guid y) => !(x == y);
+
+        /// <summary>
+        /// Determines if both instances do not have the same underlying <see cref="Guid"/> value.
+        /// </summary>
+        public static bool operator !=(Guid x, ShortGuid y) => !(x == y);
 
         /// <summary>
         /// Implicitly converts the ShortGuid to its string equivalent.
