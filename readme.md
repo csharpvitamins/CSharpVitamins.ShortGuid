@@ -1,7 +1,7 @@
 # CSharpVitamins.ShortGuid
 A convenience wrapper for dealing with URL-safe base64 encoded globally unique identifier (GUID), making a shorter string value (22 vs 36 characters long).
 
-URL-safe base64? That's just a base64 string with well known special characters replaced (/, +) or removed (==) to make is a consistent 22 characters long and URI friendly.
+URL-safe base64? That's just a base64 string with well known special characters replaced (/, +) or removed (==) to make it a consistent 22 characters long _and_ URI friendly.
 
 Originally seen on [@madskristensen](https://github.com/madskristensen)'s blog, this helper class that extended on his idea existed only as [a blog post from around 2007](https://www.singular.co.nz/2007/12/shortguid-a-shorter-and-url-friendly-guid-in-c-sharp/).
 

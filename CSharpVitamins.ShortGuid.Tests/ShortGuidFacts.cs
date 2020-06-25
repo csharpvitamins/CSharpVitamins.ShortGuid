@@ -2,7 +2,6 @@
 using System;
 using Xunit;
 
-//namespace CSharpVitamons.ShortGuid.Tests
 namespace Tests
 {
     public class ShortGuidFacts
