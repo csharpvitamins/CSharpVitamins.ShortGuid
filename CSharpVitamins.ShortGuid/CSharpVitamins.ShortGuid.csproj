@@ -12,11 +12,15 @@
     <PackageLicenseExpression></PackageLicenseExpression>
     <RepositoryUrl>https://github.com/csharpvitamins/csharpvitamins.shortguid/</RepositoryUrl>
     <PackageTags>Guid ShortGuid Identifiers Base64</PackageTags>
-    <PackageReleaseNotes>- 1.0.2 Fix: Ambiguous use of `==` operator when comparing Guid and ShortGuid instances
-- 1.0.1 Target netstandard2.0 and net40
-- 1.0.0 Initial release</PackageReleaseNotes>
+    <PackageReleaseNotes>
+- 1.0.3 Improves documentation.
+        Adds symbols package to enable SourceLink.
+- 1.0.2 Fix: Ambiguous use of `==` operator when comparing Guid and ShortGuid instances.
+- 1.0.1 Target netstandard2.0 and net40.
+- 1.0.0 Initial release.
+</PackageReleaseNotes>
     <Copyright>Copyright 2007</Copyright>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -25,7 +29,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
-
 
   <ItemGroup>
     <None Include="..\LICENSE.md">

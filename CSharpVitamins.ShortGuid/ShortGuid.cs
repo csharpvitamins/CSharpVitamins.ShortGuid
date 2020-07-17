@@ -36,9 +36,9 @@ namespace CSharpVitamins
         }
 
         /// <summary>
-        /// Creates a new instance with the given <see cref="Guid"/>.
+        /// Creates a new instance with the given <see cref="System.Guid"/>.
         /// </summary>
-        /// <param name="guid">The Guid to encode.</param>
+        /// <param name="guid">The <see cref="System.Guid"/> to encode.</param>
         public ShortGuid(Guid guid)
         {
             encodedString = Encode(guid);
@@ -46,7 +46,7 @@ namespace CSharpVitamins
         }
 
         /// <summary>
-        /// Gets the underlying <see cref="Guid"/> for the encoded ShortGuid.
+        /// Gets the underlying <see cref="System.Guid"/> for the encoded ShortGuid.
         /// </summary>
         public Guid Guid => underlyingGuid;
 
@@ -94,7 +94,7 @@ namespace CSharpVitamins
         }
 
         /// <summary>
-        /// Returns the hash code for the underlying <see cref="Guid"/>.
+        /// Returns the hash code for the underlying <see cref="System.Guid"/>.
         /// </summary>
         /// <returns></returns>
         public override int GetHashCode() => underlyingGuid.GetHashCode();
@@ -109,7 +109,7 @@ namespace CSharpVitamins
         /// Encodes the given value as an encoded ShortGuid string. The encoding is similar to
         /// Base64, with some non-URL safe characters replaced, and padding removed.
         /// </summary>
-        /// <param name="value">Any valid <see cref="Guid"/> string.</param>
+        /// <param name="value">Any valid <see cref="System.Guid"/> string.</param>
         /// <returns>A 22 character ShortGuid URL-safe Base64 string.</returns>
         public static string Encode(string value)
         {
@@ -118,10 +118,10 @@ namespace CSharpVitamins
         }
 
         /// <summary>
-        /// Encodes the given <see cref="Guid"/> as an encoded ShortGuid string. The encoding is similar to
+        /// Encodes the given <see cref="System.Guid"/> as an encoded ShortGuid string. The encoding is similar to
         /// Base64, with some non-URL safe characters replaced, and padding removed.
         /// </summary>
-        /// <param name="guid">The <see cref="Guid"/> to encode.</param>
+        /// <param name="guid">The <see cref="System.Guid"/> to encode.</param>
         /// <returns>A 22 character ShortGuid URL-safe Base64 string.</returns>
         public static string Encode(Guid guid)
         {
@@ -135,11 +135,11 @@ namespace CSharpVitamins
         }
 
         /// <summary>
-        /// Decodes the given value to a <see cref="Guid"/>.
-        /// See also <seealso cref="TryDecode(string, out Guid)"/> or <seealso cref="TryParse(string, out Guid)"/>.
+        /// Decodes the given value to a <see cref="System.Guid"/>.
+        /// <para>See also <seealso cref="TryDecode(string, out Guid)"/> or <seealso cref="TryParse(string, out Guid)"/>.</para>
         /// </summary>
         /// <param name="value">The ShortGuid encoded string to decode.</param>
-        /// <returns>A new <see cref="Guid"/> instance from the parsed string.</returns>
+        /// <returns>A new <see cref="System.Guid"/> instance from the parsed string.</returns>
         public static Guid Decode(string value)
         {
             value = value
@@ -152,10 +152,26 @@ namespace CSharpVitamins
         }
 
         /// <summary>
-        /// Decodes the given value to a <see cref="Guid"/>.
+        /// Attempts to decode the given value to a <see cref="System.Guid"/>.
+        ///
+        /// <para>The difference between TryParse and TryDecode:</para>
+        /// <list type="number">
+        ///     <item>
+        ///         <term><see cref="TryParse(string, out ShortGuid)"/></term>
+        ///         <description>Tries to parse as a <see cref="ShortGuid"/> before attempting parsing as a <see cref="System.Guid"/>, outputs the actual <see cref="ShortGuid"/> instance.</description>
+        ///     </item>
+        ///     <item>
+        ///         <term><see cref="TryParse(string, out Guid)"/></term>
+        ///         <description>Tries to parse as a <see cref="ShortGuid"/> before attempting parsing as a <see cref="System.Guid"/>, outputs the underlying <see cref="System.Guid"/>.</description>
+        ///     </item>
+        ///     <item>
+        ///         <term><see cref="TryDecode(string, out Guid)"/></term>
+        ///         <description>Tries to parse as a <see cref="ShortGuid"/> only, but outputs the result as a <see cref="System.Guid"/> - this method.</description>
+        ///     </item>
+        /// </list>
         /// </summary>
         /// <param name="value">The ShortGuid encoded string to decode.</param>
-        /// <param name="guid">A new <see cref="Guid"/> instance from the parsed string.</param>
+        /// <param name="guid">A new <see cref="System.Guid"/> instance from the parsed string.</param>
         /// <returns>A boolean indicating if the decode was successful.</returns>
         public static bool TryDecode(string value, out Guid guid)
         {
@@ -174,7 +190,7 @@ namespace CSharpVitamins
         #region Operators
 
         /// <summary>
-        /// Determines if both ShortGuid instances have the same underlying <see cref="Guid"/> value.
+        /// Determines if both ShortGuid instances have the same underlying <see cref="System.Guid"/> value.
         /// </summary>
         public static bool operator ==(ShortGuid x, ShortGuid y)
         {
@@ -185,7 +201,7 @@ namespace CSharpVitamins
         }
 
         /// <summary>
-        /// Determines if both instances have the same underlying <see cref="Guid"/> value.
+        /// Determines if both instances have the same underlying <see cref="System.Guid"/> value.
         /// </summary>
         public static bool operator ==(ShortGuid x, Guid y)
         {
@@ -196,22 +212,22 @@ namespace CSharpVitamins
         }
 
         /// <summary>
-        /// Determines if both instances have the same underlying <see cref="Guid"/> value.
+        /// Determines if both instances have the same underlying <see cref="System.Guid"/> value.
         /// </summary>
         public static bool operator ==(Guid x, ShortGuid y) => y == x; // NB: order of arguments
 
         /// <summary>
-        /// Determines if both ShortGuid instances do not have the same underlying <see cref="Guid"/> value.
+        /// Determines if both ShortGuid instances do not have the same underlying <see cref="System.Guid"/> value.
         /// </summary>
         public static bool operator !=(ShortGuid x, ShortGuid y) => !(x == y);
 
         /// <summary>
-        /// Determines if both instances do not have the same underlying <see cref="Guid"/> value.
+        /// Determines if both instances do not have the same underlying <see cref="System.Guid"/> value.
         /// </summary>
         public static bool operator !=(ShortGuid x, Guid y) => !(x == y);
 
         /// <summary>
-        /// Determines if both instances do not have the same underlying <see cref="Guid"/> value.
+        /// Determines if both instances do not have the same underlying <see cref="System.Guid"/> value.
         /// </summary>
         public static bool operator !=(Guid x, ShortGuid y) => !(x == y);
 
@@ -221,7 +237,7 @@ namespace CSharpVitamins
         public static implicit operator string(ShortGuid shortGuid) => shortGuid.encodedString;
 
         /// <summary>
-        /// Implicitly converts the ShortGuid to its <see cref="Guid"/> equivalent.
+        /// Implicitly converts the ShortGuid to its <see cref="System.Guid"/> equivalent.
         /// </summary>
         public static implicit operator Guid(ShortGuid shortGuid) => shortGuid.underlyingGuid;
 
@@ -241,7 +257,7 @@ namespace CSharpVitamins
         }
 
         /// <summary>
-        /// Implicitly converts the <see cref="Guid"/> to a ShortGuid.
+        /// Implicitly converts the <see cref="System.Guid"/> to a ShortGuid.
         /// </summary>
         public static implicit operator ShortGuid(Guid guid)
         {
@@ -254,7 +270,23 @@ namespace CSharpVitamins
         #endregion
 
         /// <summary>
-        /// Tries to parse the value as a ShortGuid or <see cref="Guid"/> string.
+        /// Tries to parse the value as a <see cref="ShortGuid"/> or <see cref="System.Guid"/> string, and outputs an actual <see cref="ShortGuid"/> instance.
+        /// 
+        /// <para>The difference between TryParse and TryDecode:</para>
+        /// <list type="number">
+        ///     <item>
+        ///         <term><see cref="TryParse(string, out ShortGuid)"/></term>
+        ///         <description>Tries to parse as a <see cref="ShortGuid"/> before attempting parsing as a <see cref="System.Guid"/>, outputs the actual <see cref="ShortGuid"/> instance - this method.</description>
+        ///     </item>
+        ///     <item>
+        ///         <term><see cref="TryParse(string, out Guid)"/></term>
+        ///         <description>Tries to parse as a <see cref="ShortGuid"/> before attempting parsing as a <see cref="System.Guid"/>, outputs the underlying <see cref="System.Guid"/>.</description>
+        ///     </item>
+        ///     <item>
+        ///         <term><see cref="TryDecode(string, out Guid)"/></term>
+        ///         <description>Tries to parse as a <see cref="ShortGuid"/> only, but outputs the result as a <see cref="System.Guid"/>.</description>
+        ///     </item>
+        /// </list>
         /// </summary>
         /// <param name="value">The ShortGuid encoded string or string representation of a Guid.</param>
         /// <param name="shortGuid">A new <see cref="ShortGuid"/> instance from the parsed string.</param>
@@ -280,10 +312,26 @@ namespace CSharpVitamins
         }
 
         /// <summary>
-        /// Tries to parse the value as a ShortGuid or <see cref="Guid"/> string, and outputs the underlying <see cref="Guid"/> value.
+        /// Tries to parse the value as a <see cref="ShortGuid"/> or <see cref="System.Guid"/> string, and outputs the underlying <see cref="Guid"/> value.
+        ///
+        /// <para>The difference between TryParse and TryDecode:</para>
+        /// <list type="number">
+        ///     <item>
+        ///         <term><see cref="TryParse(string, out ShortGuid)"/></term>
+        ///         <description>Tries to parse as a <see cref="ShortGuid"/> before attempting parsing as a <see cref="System.Guid"/>, outputs the actual <see cref="ShortGuid"/> instance.</description>
+        ///     </item>
+        ///     <item>
+        ///         <term><see cref="TryParse(string, out Guid)"/></term>
+        ///         <description>Tries to parse as a <see cref="ShortGuid"/> before attempting parsing as a <see cref="System.Guid"/>, outputs the underlying <see cref="System.Guid"/> - this method.</description>
+        ///     </item>
+        ///     <item>
+        ///         <term><see cref="TryDecode(string, out Guid)"/></term>
+        ///         <description>Tries to parse as a <see cref="ShortGuid"/> only, but outputs the result as a <see cref="System.Guid"/>.</description>
+        ///     </item>
+        /// </list>
         /// </summary>
         /// <param name="value">The ShortGuid encoded string or string representation of a Guid.</param>
-        /// <param name="guid">A new <see cref="Guid"/> instance from the parsed string.</param>
+        /// <param name="guid">A new <see cref="System.Guid"/> instance from the parsed string.</param>
         /// <returns>A boolean indicating if the parse was successful.</returns>
         public static bool TryParse(string value, out Guid guid)
         {
