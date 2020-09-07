@@ -1,4 +1,4 @@
-using CSharpVitamins;
+﻿using CSharpVitamins;
 using System;
 using Xunit;
 
@@ -22,12 +22,6 @@ namespace Tests
             var actual = new ShortGuid(SampleShortGuidString);
 
             assert_instance_equals_samples(actual);
-        }
-
-        [Fact]
-        void invalid_strings_must_not_return_true_on_try_parse()
-        {
-            Assert.False(ShortGuid.TryParse("bullshitmustnotbevalid", out ShortGuid _));
         }
 
         [Fact]
