@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 
 namespace CSharpVitamins
@@ -294,16 +294,16 @@ namespace CSharpVitamins
         public static bool TryParse(string value, out ShortGuid shortGuid)
         {
             // Try a ShortGuid string.
-            if (ShortGuid.TryDecode(value, out var guid))
+            if (ShortGuid.TryDecode(value, out Guid decodedGuid) && ((ShortGuid)decodedGuid).Value == value)
             {
-                shortGuid = guid;
+                shortGuid = decodedGuid;
                 return true;
             }
 
             // Try a Guid string.
-            if (Guid.TryParse(value, out guid))
+            if (Guid.TryParse(value, out Guid guid))
             {
-                shortGuid = guid;
+                shortGuid = new ShortGuid(guid);
                 return true;
             }
 
