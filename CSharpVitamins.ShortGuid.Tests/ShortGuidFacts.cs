@@ -27,10 +27,14 @@ namespace Tests
         }
 
         [Fact]
-        private void invalid_strings_must_not_return_true_on_try_parse()
+        private void invalid_strings_must_not_return_true_on_try_parse_with_strict_true()
         {
-            Assert.True(ShortGuid.TryParse("bullshitmustnotbevalid", out ShortGuid _, strict: false));
-            Assert.False(ShortGuid.TryParse("bullshitmustnotbevalid", out ShortGuid _, strict: true));
+            var base64String = "bullshitmustnotbevalid";
+            Assert.True(ShortGuid.TryParse(base64String, out ShortGuid shortGuidA)); // strict defaults to false
+            Assert.False(ShortGuid.TryParse(base64String, out ShortGuid _, strict: true));
+            Assert.Throws<FormatException>(() => ShortGuid.Decode("bullshitmustnotbevalid", strict: true));
+            Guid guidA = ShortGuid.Decode("bullshitmustnotbevalid"); // does not throw an exception because strict defaults to false
+            Assert.Equal((Guid)shortGuidA, guidA);
         }
 
         [Fact]
