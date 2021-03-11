@@ -20,8 +20,8 @@ namespace CSharpVitamins
         /// </summary>
         public static readonly ShortGuid Empty = new ShortGuid(Guid.Empty);
 
-        private Guid underlyingGuid;
-        private string encodedString;
+        Guid underlyingGuid;
+        string encodedString;
 
         /// <summary>
         /// Creates a new instance with the given URL-safe Base64 encoded string.
@@ -319,6 +319,7 @@ namespace CSharpVitamins
                 shortGuid = guid;
                 return true;
             }
+
             shortGuid = ShortGuid.Empty;
             return false;
         }
