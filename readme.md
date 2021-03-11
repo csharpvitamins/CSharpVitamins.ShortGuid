@@ -10,7 +10,19 @@ Available on [NuGet](https://www.nuget.org/packages/csharpvitamins.shortguid/). 
 
     PM> Install-Package CSharpVitamins.ShortGuid
 
+### Strict Parsing (v2.0.0)
+As of version 2.0.0, `ShortGuid` performs a sanity check when decoding strings to ensure they haven't been
+tampered with, i.e. allowing the end of a Base64 string to be tweaked where it still produces that same
+byte array to create the underlying Guid. Effectively there is "unused space" in the Base64 string which is
+ignored, but will now result in an `FormatException` being thrown.
 
+`ShortGuid` will never produce an invalid string, however if one is supplied, it could result in an unintended
+collision where multiple URL-safe Base64 strings can point to the same Guid. To avoid this uncertainty, a
+round-trip check is performed to ensure a 1-1 match with the input string.
+
+Stick with version 1.1.0 if you require the old behaviour with opt-in strict parsing.
+
+---
 
 ## The Gist
 
