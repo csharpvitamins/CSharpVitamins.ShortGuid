@@ -210,6 +210,83 @@ namespace CSharpVitamins
             }
         }
 
+        /// <summary>
+        /// Tries to parse the value as a <see cref="ShortGuid"/> or <see cref="System.Guid"/> string, and outputs an actual <see cref="ShortGuid"/> instance.
+        ///
+        /// <para>The difference between TryParse and TryDecode:</para>
+        /// <list type="number">
+        ///     <item>
+        ///         <term><see cref="TryParse(string, out ShortGuid)"/></term>
+        ///         <description>Tries to parse as a <see cref="ShortGuid"/> before attempting parsing as a <see cref="System.Guid"/>, outputs the actual <see cref="ShortGuid"/> instance - this method.</description>
+        ///     </item>
+        ///     <item>
+        ///         <term><see cref="TryParse(string, out Guid)"/></term>
+        ///         <description>Tries to parse as a <see cref="ShortGuid"/> before attempting parsing as a <see cref="System.Guid"/>, outputs the underlying <see cref="System.Guid"/>.</description>
+        ///     </item>
+        ///     <item>
+        ///         <term><see cref="TryDecode(string, out Guid)"/></term>
+        ///         <description>Tries to parse as a <see cref="ShortGuid"/> only, but outputs the result as a <see cref="System.Guid"/>.</description>
+        ///     </item>
+        /// </list>
+        /// </summary>
+        /// <param name="value">The ShortGuid encoded string or string representation of a Guid.</param>
+        /// <param name="shortGuid">A new <see cref="ShortGuid"/> instance from the parsed string.</param>
+        public static bool TryParse(string value, out ShortGuid shortGuid)
+        {
+            // Try a ShortGuid string.
+            if (ShortGuid.TryDecode(value, out var guid))
+            {
+                shortGuid = guid;
+                return true;
+            }
+
+            // Try a Guid string.
+            if (Guid.TryParse(value, out guid))
+            {
+                shortGuid = guid;
+                return true;
+            }
+
+            shortGuid = ShortGuid.Empty;
+            return false;
+        }
+
+        /// <summary>
+        /// Tries to parse the value as a <see cref="ShortGuid"/> or <see cref="System.Guid"/> string, and outputs the underlying <see cref="Guid"/> value.
+        ///
+        /// <para>The difference between TryParse and TryDecode:</para>
+        /// <list type="number">
+        ///     <item>
+        ///         <term><see cref="TryParse(string, out ShortGuid)"/></term>
+        ///         <description>Tries to parse as a <see cref="ShortGuid"/> before attempting parsing as a <see cref="System.Guid"/>, outputs the actual <see cref="ShortGuid"/> instance.</description>
+        ///     </item>
+        ///     <item>
+        ///         <term><see cref="TryParse(string, out Guid)"/></term>
+        ///         <description>Tries to parse as a <see cref="ShortGuid"/> before attempting parsing as a <see cref="System.Guid"/>, outputs the underlying <see cref="System.Guid"/> - this method.</description>
+        ///     </item>
+        ///     <item>
+        ///         <term><see cref="TryDecode(string, out Guid)"/></term>
+        ///         <description>Tries to parse as a <see cref="ShortGuid"/> only, but outputs the result as a <see cref="System.Guid"/>.</description>
+        ///     </item>
+        /// </list>
+        /// </summary>
+        /// <param name="value">The ShortGuid encoded string or string representation of a Guid.</param>
+        /// <param name="guid">A new <see cref="System.Guid"/> instance from the parsed string.</param>
+        /// <returns>A boolean indicating if the parse was successful.</returns>
+        public static bool TryParse(string value, out Guid guid)
+        {
+            // Try a ShortGuid string.
+            if (ShortGuid.TryDecode(value, out guid))
+                return true;
+
+            // Try a Guid string.
+            if (Guid.TryParse(value, out guid))
+                return true;
+
+            guid = Guid.Empty;
+            return false;
+        }
+
         #region Operators
 
         /// <summary>
@@ -291,82 +368,5 @@ namespace CSharpVitamins
         }
 
         #endregion
-
-        /// <summary>
-        /// Tries to parse the value as a <see cref="ShortGuid"/> or <see cref="System.Guid"/> string, and outputs an actual <see cref="ShortGuid"/> instance.
-        ///
-        /// <para>The difference between TryParse and TryDecode:</para>
-        /// <list type="number">
-        ///     <item>
-        ///         <term><see cref="TryParse(string, out ShortGuid)"/></term>
-        ///         <description>Tries to parse as a <see cref="ShortGuid"/> before attempting parsing as a <see cref="System.Guid"/>, outputs the actual <see cref="ShortGuid"/> instance - this method.</description>
-        ///     </item>
-        ///     <item>
-        ///         <term><see cref="TryParse(string, out Guid)"/></term>
-        ///         <description>Tries to parse as a <see cref="ShortGuid"/> before attempting parsing as a <see cref="System.Guid"/>, outputs the underlying <see cref="System.Guid"/>.</description>
-        ///     </item>
-        ///     <item>
-        ///         <term><see cref="TryDecode(string, out Guid)"/></term>
-        ///         <description>Tries to parse as a <see cref="ShortGuid"/> only, but outputs the result as a <see cref="System.Guid"/>.</description>
-        ///     </item>
-        /// </list>
-        /// </summary>
-        /// <param name="value">The ShortGuid encoded string or string representation of a Guid.</param>
-        /// <param name="shortGuid">A new <see cref="ShortGuid"/> instance from the parsed string.</param>
-        public static bool TryParse(string value, out ShortGuid shortGuid)
-        {
-            // Try a ShortGuid string.
-            if (ShortGuid.TryDecode(value, out var guid))
-            {
-                shortGuid = guid;
-                return true;
-            }
-
-            // Try a Guid string.
-            if (Guid.TryParse(value, out guid))
-            {
-                shortGuid = guid;
-                return true;
-            }
-
-            shortGuid = ShortGuid.Empty;
-            return false;
-        }
-
-        /// <summary>
-        /// Tries to parse the value as a <see cref="ShortGuid"/> or <see cref="System.Guid"/> string, and outputs the underlying <see cref="Guid"/> value.
-        ///
-        /// <para>The difference between TryParse and TryDecode:</para>
-        /// <list type="number">
-        ///     <item>
-        ///         <term><see cref="TryParse(string, out ShortGuid)"/></term>
-        ///         <description>Tries to parse as a <see cref="ShortGuid"/> before attempting parsing as a <see cref="System.Guid"/>, outputs the actual <see cref="ShortGuid"/> instance.</description>
-        ///     </item>
-        ///     <item>
-        ///         <term><see cref="TryParse(string, out Guid)"/></term>
-        ///         <description>Tries to parse as a <see cref="ShortGuid"/> before attempting parsing as a <see cref="System.Guid"/>, outputs the underlying <see cref="System.Guid"/> - this method.</description>
-        ///     </item>
-        ///     <item>
-        ///         <term><see cref="TryDecode(string, out Guid)"/></term>
-        ///         <description>Tries to parse as a <see cref="ShortGuid"/> only, but outputs the result as a <see cref="System.Guid"/>.</description>
-        ///     </item>
-        /// </list>
-        /// </summary>
-        /// <param name="value">The ShortGuid encoded string or string representation of a Guid.</param>
-        /// <param name="guid">A new <see cref="System.Guid"/> instance from the parsed string.</param>
-        /// <returns>A boolean indicating if the parse was successful.</returns>
-        public static bool TryParse(string value, out Guid guid)
-        {
-            // Try a ShortGuid string.
-            if (ShortGuid.TryDecode(value, out guid))
-                return true;
-
-            // Try a Guid string.
-            if (Guid.TryParse(value, out guid))
-                return true;
-
-            guid = Guid.Empty;
-            return false;
-        }
     }
 }
