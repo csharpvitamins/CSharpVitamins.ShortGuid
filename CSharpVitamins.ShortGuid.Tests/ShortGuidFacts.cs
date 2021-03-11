@@ -11,6 +11,11 @@ namespace Tests
         const string SampleShortGuidString = "00amyWGct0y_ze4lIsj2Mw";
 
         /// <summary>
+        /// Literal: c9a646d3-9c61-4cb7-bfcd-ee2522c8f633 and some extra chars.
+        /// </summary>
+        const string LongerBase64String = "YzlhNjQ2ZDMtOWM2MS00Y2I3LWJmY2QtZWUyNTIyYzhmNjMzIGFuZCBzb21lIGV4dHJhIGNoYXJzLg";
+
+        /// <summary>
         /// "bullshitmustnotbevalid" in this case does produce a valid Guid, which when output encodes as correctly
         /// as "bullshitmustnotbevaliQ".
         /// </summary>
@@ -40,6 +45,22 @@ namespace Tests
         void StrictDecode_parses_valid_shortGuid_strict_on()
         {
             ShortGuid.Decode(SampleShortGuidString, strict: true);
+        }
+
+        [Fact]
+        void Decode_does_not_parse_longer_base64_string()
+        {
+            Assert.Throws<ArgumentException>(
+                () => ShortGuid.Decode(LongerBase64String, strict: false)
+                );
+        }
+
+        [Fact]
+        void StrictDecode_does_not_parse_longer_base64_string()
+        {
+            Assert.Throws<ArgumentException>(
+                () => ShortGuid.Decode(LongerBase64String, strict: true)
+                );
         }
 
         [Fact]

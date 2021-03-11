@@ -146,18 +146,23 @@ namespace CSharpVitamins
         /// <para>See the strict version of this method which ensures the value being passed in is valid. Strict decoding
         /// will be on by default from version 2+.</para>
         /// </summary>
-        /// <param name="value">The ShortGuid encoded string to decode.</param>
+        /// <param name="value">A 22 character URL-safe Base64 encoded string to decode.</param>
         /// <returns>A new <see cref="System.Guid"/> instance from the parsed string.</returns>
         public static Guid Decode(string value)
         {
-            return Decode(value, strict: false);
+            string base64 = value
+                .Replace("_", "/")
+                .Replace("-", "+") + "==";
+
+            byte[] blob = Convert.FromBase64String(base64);
+            return new Guid(blob);
         }
 
         /// <summary>
         /// Decodes the given value to a <see cref="System.Guid"/>.
         /// <para>See also <seealso cref="TryDecode(string, out Guid, bool)"/> or <seealso cref="TryParse(string, out Guid, bool)"/>.</para>
         /// </summary>
-        /// <param name="value">The ShortGuid encoded string to decode.</param>
+        /// <param name="value">A 22 character URL-safe Base64 encoded string to decode.</param>
         /// <param name="strict">If true the re-encoded result has to exactly match the input <paramref name="value"/>; if false any valid base64 string will be accepted.</param>
         /// <returns>A new <see cref="System.Guid"/> instance from the parsed string.</returns>
         /// <exception cref="FormatException">
@@ -166,6 +171,19 @@ namespace CSharpVitamins
         /// </exception>
         public static Guid Decode(string value, bool strict)
         {
+            // if not strict, defer to the older non-strict version.
+            if (!strict)
+                return Decode(value);
+
+            // avoid parsing larger strings/blobs
+            if (value?.Length != 22)
+            {
+                throw new ArgumentException(
+                    $"A ShortGuid must be exactly 22 characters long. Received a {value?.Length ?? 0} character string.",
+                    paramName: nameof(value)
+                );
+            }
+
             string base64 = value
                 .Replace("_", "/")
                 .Replace("-", "+") + "==";
@@ -173,17 +191,16 @@ namespace CSharpVitamins
             byte[] blob = Convert.FromBase64String(base64);
             var guid = new Guid(blob);
 
-            if (!strict)
-                return guid;
-
             var sanityCheck = Encode(guid);
-            if (sanityCheck == value)
-                return guid;
+            if (sanityCheck != value)
+            {
+                throw new FormatException(
+                    $"Invalid strict ShortGuid encoded string. The string '{value}' is valid URL-safe Base64, " +
+                    $"but failed a round-trip test expecting '{sanityCheck}'."
+                );
+            }
 
-            throw new FormatException(
-                $"Invalid strict ShortGuid encoded string. The string '{value}' is valid URL-safe Base64, " +
-                $"but failed a round-trip test expecting '{sanityCheck}'."
-            );
+            return guid;
         }
 
         /// <summary>
