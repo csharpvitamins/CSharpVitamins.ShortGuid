@@ -15,7 +15,7 @@ namespace CSharpVitamins
     public struct ShortGuid
     {
         /// <summary>
-        /// A read-only instance of the ShortGuid struct whose value is guaranteed to be all zeroes i.e. equivilent
+        /// A read-only instance of the ShortGuid struct whose value is guaranteed to be all zeroes i.e. equivalent
         /// to <see cref="Guid.Empty"/>.
         /// </summary>
         public static readonly ShortGuid Empty = new ShortGuid(Guid.Empty);
@@ -25,8 +25,8 @@ namespace CSharpVitamins
 
         /// <summary>
         /// Creates a new instance with the given URL-safe Base64 encoded string.
-        /// See also <seealso cref="ShortGuid.TryParse(string, out ShortGuid)"/> which will try to coerce the
-        /// the value from URL-safe Base64 or normal Guid string
+        /// <para>See also <seealso cref="ShortGuid.TryParse(string, out ShortGuid)"/> which will try to coerce the
+        /// the value from URL-safe Base64 or normal Guid string.</para>
         /// </summary>
         /// <param name="value">A ShortGuid encoded string e.g. URL-safe Base64.</param>
         public ShortGuid(string value)
@@ -63,7 +63,7 @@ namespace CSharpVitamins
 
         /// <summary>
         /// Returns a value indicating whether this instance and a specified object represent the same type and value.
-        /// Compares for equality against other string, Guid and ShortGuid types.
+        /// <para>Compares for equality against other string, Guid and ShortGuid types.</para>
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
@@ -137,6 +137,14 @@ namespace CSharpVitamins
         /// <summary>
         /// Decodes the given value to a <see cref="System.Guid"/>.
         /// <para>See also <seealso cref="TryDecode(string, out Guid)"/> or <seealso cref="TryParse(string, out Guid)"/>.</para>
+        /// 
+        /// <para>NB: This method does not check if the result Guid is strictly correct. It accepts any Base64 encoded
+        /// string, allowing a) longer strings to be parsed where the remaining data is ignored and b) the end of a
+        /// Base64 string to be tweaked where it still produces that same byte array to create the underlying Guid.
+        /// Effectively there is "unused space" in the Base64 string which is ignored.
+        /// </para>
+        /// <para>See the strict version of this method which ensures the value being passed in is valid. Strict decoding
+        /// will be on by default from version 2+.</para>
         /// </summary>
         /// <param name="value">The ShortGuid encoded string to decode.</param>
         /// <returns>A new <see cref="System.Guid"/> instance from the parsed string.</returns>
@@ -152,7 +160,10 @@ namespace CSharpVitamins
         /// <param name="value">The ShortGuid encoded string to decode.</param>
         /// <param name="strict">If true the re-encoded result has to exactly match the input <paramref name="value"/>; if false any valid base64 string will be accepted.</param>
         /// <returns>A new <see cref="System.Guid"/> instance from the parsed string.</returns>
-        /// <exception cref="FormatException">If <paramref name="value"/> is no valid base64 string (<seealso cref="Convert.FromBase64String(string)"/>) or if the <paramref name="strict"/> flag is set and the re-encoded output doesn't match <paramref name="value"/>.</exception>
+        /// <exception cref="FormatException">
+        /// If <paramref name="value"/> is not a valid Base64 string (<seealso cref="Convert.FromBase64String(string)"/>)
+        /// or if the <paramref name="strict"/> flag is set and the decoded guid doesn't strictly match the input <paramref name="value"/>.
+        /// </exception>
         public static Guid Decode(string value, bool strict)
         {
             string base64 = value
@@ -165,11 +176,14 @@ namespace CSharpVitamins
             if (!strict)
                 return guid;
 
-            var reencodedOutput = Encode(guid);
-            if (reencodedOutput == value)
+            var sanityCheck = Encode(guid);
+            if (sanityCheck == value)
                 return guid;
 
-            throw new FormatException($"The string '{value}' is a valid base64 string but doesn't match the re-encoded {nameof(ShortGuid)} '{reencodedOutput}'.");
+            throw new FormatException(
+                $"Invalid strict ShortGuid encoded string. The string '{value}' is valid URL-safe Base64, " +
+                $"but failed a round-trip test expecting '{sanityCheck}'."
+            );
         }
 
         /// <summary>
@@ -190,6 +204,12 @@ namespace CSharpVitamins
         ///         <description>Tries to parse as a <see cref="ShortGuid"/> only, but outputs the result as a <see cref="System.Guid"/> - this method.</description>
         ///     </item>
         /// </list>
+        /// 
+        /// <para>NB: This method does not check if the result Guid is strictly correct. It accepts any Base64 encoded
+        /// string, allowing a) longer strings to be parsed where the remaining data is ignored and b) the end of a
+        /// Base64 string to be tweaked where it still produces that same byte array to create the underlying Guid.
+        /// Effectively there is "unused space" in the Base64 string which is ignored.
+        /// </para>
         /// </summary>
         /// <param name="value">The ShortGuid encoded string to decode.</param>
         /// <param name="guid">A new <see cref="System.Guid"/> instance from the parsed string.</param>
@@ -336,6 +356,12 @@ namespace CSharpVitamins
         ///         <description>Tries to parse as a <see cref="ShortGuid"/> only, but outputs the result as a <see cref="System.Guid"/>.</description>
         ///     </item>
         /// </list>
+        /// 
+        /// <para>NB: This method does not check if the result Guid is strictly correct. It accepts any Base64 encoded
+        /// string, allowing a) longer strings to be parsed where the remaining data is ignored and b) the end of a
+        /// Base64 string to be tweaked where it still produces that same byte array to create the underlying Guid.
+        /// Effectively there is "unused space" in the Base64 string which is ignored.
+        /// </para>
         /// </summary>
         /// <param name="value">The ShortGuid encoded string or string representation of a Guid.</param>
         /// <param name="shortGuid">A new <see cref="ShortGuid"/> instance from the parsed string.</param>
@@ -406,6 +432,12 @@ namespace CSharpVitamins
         ///         <description>Tries to parse as a <see cref="ShortGuid"/> only, but outputs the result as a <see cref="System.Guid"/>.</description>
         ///     </item>
         /// </list>
+        /// 
+        /// <para>NB: This method does not check if the result Guid is strictly correct. It accepts any Base64 encoded
+        /// string, allowing a) longer strings to be parsed where the remaining data is ignored and b) the end of a
+        /// Base64 string to be tweaked where it still produces that same byte array to create the underlying Guid.
+        /// Effectively there is "unused space" in the Base64 string which is ignored.
+        /// </para>
         /// </summary>
         /// <param name="value">The ShortGuid encoded string or string representation of a Guid.</param>
         /// <param name="guid">A new <see cref="System.Guid"/> instance from the parsed string.</param>
