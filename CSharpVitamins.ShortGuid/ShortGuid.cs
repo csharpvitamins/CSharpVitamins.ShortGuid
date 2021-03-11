@@ -155,11 +155,11 @@ namespace CSharpVitamins
         /// <exception cref="FormatException">If <paramref name="value"/> is no valid base64 string (<seealso cref="Convert.FromBase64String(string)"/>) or if the <paramref name="strict"/> flag is set and the re-encoded output doesn't match <paramref name="value"/>.</exception>
         public static Guid Decode(string value, bool strict)
         {
-            value = value
+            string base64 = value
                 .Replace("_", "/")
-                .Replace("-", "+");
+                .Replace("-", "+") + "==";
 
-            byte[] blob = Convert.FromBase64String(value + "==");
+            byte[] blob = Convert.FromBase64String(base64);
             var guid = new Guid(blob);
 
             if (!strict)

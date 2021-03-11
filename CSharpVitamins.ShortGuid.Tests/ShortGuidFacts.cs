@@ -25,6 +25,18 @@ namespace Tests
         }
 
         [Fact]
+        void StrictDecode_parses_valid_shortGuid_strict_off()
+        {
+            ShortGuid.Decode(SampleShortGuidString, strict: false);
+        }
+
+        [Fact]
+        void StrictDecode_parses_valid_shortGuid_strict_on()
+        {
+            ShortGuid.Decode(SampleShortGuidString, strict: true);
+        }
+
+        [Fact]
         void invalid_strings_must_not_return_true_on_try_parse_with_strict_true()
         {
             var base64String = "bullshitmustnotbevalid";
