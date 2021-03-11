@@ -10,6 +10,17 @@ namespace Tests
         static readonly Guid SampleGuid = new Guid(SampleGuidString);
         const string SampleShortGuidString = "00amyWGct0y_ze4lIsj2Mw";
 
+        /// <summary>
+        /// Literal: c9a646d3-9c61-4cb7-bfcd-ee2522c8f633 and some extra chars.
+        /// </summary>
+        const string LongerBase64String = "YzlhNjQ2ZDMtOWM2MS00Y2I3LWJmY2QtZWUyNTIyYzhmNjMzIGFuZCBzb21lIGV4dHJhIGNoYXJzLg";
+
+        /// <summary>
+        /// "bullshitmustnotbevalid" in this case does produce a valid Guid, which when output encodes as correctly
+        /// as "bullshitmustnotbevaliQ".
+        /// </summary>
+        const string InvalidSampleShortGuidString = "bullshitmustnotbevalid";
+
         void assert_instance_equals_samples(ShortGuid instance)
         {
             Assert.Equal(SampleShortGuidString, instance.Value);
@@ -22,6 +33,44 @@ namespace Tests
             var actual = new ShortGuid(SampleShortGuidString);
 
             assert_instance_equals_samples(actual);
+        }
+
+        [Fact]
+        void StrictDecode_parses_valid_shortGuid_strict_off()
+        {
+            ShortGuid.Decode(SampleShortGuidString, strict: false);
+        }
+
+        [Fact]
+        void StrictDecode_parses_valid_shortGuid_strict_on()
+        {
+            ShortGuid.Decode(SampleShortGuidString, strict: true);
+        }
+
+        [Fact]
+        void Decode_does_not_parse_longer_base64_string()
+        {
+            Assert.Throws<ArgumentException>(
+                () => ShortGuid.Decode(LongerBase64String, strict: false)
+                );
+        }
+
+        [Fact]
+        void StrictDecode_does_not_parse_longer_base64_string()
+        {
+            Assert.Throws<ArgumentException>(
+                () => ShortGuid.Decode(LongerBase64String, strict: true)
+                );
+        }
+
+        [Fact]
+        void invalid_strings_must_not_return_true_on_try_parse_with_strict_true()
+        {
+            Assert.True(ShortGuid.TryParse(InvalidSampleShortGuidString, out ShortGuid shortGuidA)); // strict defaults to false
+            Assert.False(ShortGuid.TryParse(InvalidSampleShortGuidString, out ShortGuid _, strict: true));
+            Assert.Throws<FormatException>(() => ShortGuid.Decode(InvalidSampleShortGuidString, strict: true));
+            Guid guidA = ShortGuid.Decode(InvalidSampleShortGuidString); // does not throw an exception because strict defaults to false
+            Assert.Equal((Guid)shortGuidA, guidA);
         }
 
         [Fact]

@@ -13,6 +13,7 @@
     <RepositoryUrl>https://github.com/csharpvitamins/csharpvitamins.shortguid/</RepositoryUrl>
     <PackageTags>Guid ShortGuid Identifiers Base64</PackageTags>
     <PackageReleaseNotes>
+- 1.0.4 Adds overloads for strict parsing to (Try)Decode/Parse methods. Default: strict=false for backwards compatibility.
 - 1.0.3 Improves documentation.
         Adds symbols package to enable SourceLink.
 - 1.0.2 Fix: Ambiguous use of `==` operator when comparing Guid and ShortGuid instances.
@@ -20,7 +21,7 @@
 - 1.0.0 Initial release.
 </PackageReleaseNotes>
     <Copyright>Copyright 2007</Copyright>
-    <Version>1.0.3</Version>
+    <Version>1.0.4</Version>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
