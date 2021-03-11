@@ -38,20 +38,20 @@ namespace Tests
         [Fact]
         void StrictDecode_parses_valid_shortGuid_strict_off()
         {
-            ShortGuid.Decode(SampleShortGuidString, strict: false);
+            ShortGuid.Decode(SampleShortGuidString);
         }
 
         [Fact]
         void StrictDecode_parses_valid_shortGuid_strict_on()
         {
-            ShortGuid.Decode(SampleShortGuidString, strict: true);
+            ShortGuid.Decode(SampleShortGuidString);
         }
 
         [Fact]
         void Decode_does_not_parse_longer_base64_string()
         {
             Assert.Throws<ArgumentException>(
-                () => ShortGuid.Decode(LongerBase64String, strict: false)
+                () => ShortGuid.Decode(LongerBase64String)
                 );
         }
 
@@ -59,34 +59,31 @@ namespace Tests
         void StrictDecode_does_not_parse_longer_base64_string()
         {
             Assert.Throws<ArgumentException>(
-                () => ShortGuid.Decode(LongerBase64String, strict: true)
+                () => ShortGuid.Decode(LongerBase64String)
                 );
         }
 
         [Fact]
         void invalid_strings_must_not_return_true_on_try_parse_with_strict_true()
         {
-            // loose parsing should return true
-            Assert.True(ShortGuid.TryParse(InvalidSampleShortGuidString, out ShortGuid looseSguid, strict: false));
+            // try parse should return false
+            Assert.False(ShortGuid.TryParse(InvalidSampleShortGuidString, out ShortGuid strictSguid));
 
-            // strict parsing should return false
-            Assert.False(ShortGuid.TryParse(InvalidSampleShortGuidString, out ShortGuid strictSguid, strict: true));
-
-            // decode with strict should throw
+            // decode should throw
             Assert.Throws<FormatException>(
-                () => ShortGuid.Decode(InvalidSampleShortGuidString, strict: true)
+                () => ShortGuid.Decode(InvalidSampleShortGuidString)
                 );
 
-            // does not throw an exception because strict defaults to false
-            Guid looseDecodedSguid = ShortGuid.Decode(InvalidSampleShortGuidString);
-
-            Assert.Equal((Guid)looseSguid, looseDecodedSguid);
+            // .ctor should throw
+            Assert.Throws<FormatException>(
+                () => new ShortGuid(InvalidSampleShortGuidString)
+                );
         }
 
         [Fact]
         void ctor_throws_when_trying_to_decode_guid_string()
         {
-            Assert.Throws<FormatException>(
+            Assert.Throws<ArgumentException>(
                 () => new ShortGuid(SampleGuidString)
                 );
         }
@@ -153,8 +150,12 @@ namespace Tests
         [Fact]
         void Decode_fails_on_unexpected_string()
         {
-            Assert.Throws<FormatException>(
+            Assert.Throws<ArgumentException>(
                 () => ShortGuid.Decode("Am I valid?")
+                );
+
+            Assert.Throws<FormatException>(
+                () => ShortGuid.Decode("I am 22characters long")
                 );
         }
 
