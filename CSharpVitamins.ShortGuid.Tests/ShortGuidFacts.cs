@@ -66,11 +66,21 @@ namespace Tests
         [Fact]
         void invalid_strings_must_not_return_true_on_try_parse_with_strict_true()
         {
-            Assert.True(ShortGuid.TryParse(InvalidSampleShortGuidString, out ShortGuid shortGuidA)); // strict defaults to false
-            Assert.False(ShortGuid.TryParse(InvalidSampleShortGuidString, out ShortGuid _, strict: true));
-            Assert.Throws<FormatException>(() => ShortGuid.Decode(InvalidSampleShortGuidString, strict: true));
-            Guid guidA = ShortGuid.Decode(InvalidSampleShortGuidString); // does not throw an exception because strict defaults to false
-            Assert.Equal((Guid)shortGuidA, guidA);
+            // loose parsing should return true
+            Assert.True(ShortGuid.TryParse(InvalidSampleShortGuidString, out ShortGuid looseSguid, strict: false));
+
+            // strict parsing should return false
+            Assert.False(ShortGuid.TryParse(InvalidSampleShortGuidString, out ShortGuid strictSguid, strict: true));
+
+            // decode with strict should throw
+            Assert.Throws<FormatException>(
+                () => ShortGuid.Decode(InvalidSampleShortGuidString, strict: true)
+                );
+
+            // does not throw an exception because strict defaults to false
+            Guid looseDecodedSguid = ShortGuid.Decode(InvalidSampleShortGuidString);
+
+            Assert.Equal((Guid)looseSguid, looseDecodedSguid);
         }
 
         [Fact]
