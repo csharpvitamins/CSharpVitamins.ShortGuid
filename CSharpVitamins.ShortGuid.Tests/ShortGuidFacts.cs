@@ -10,6 +10,12 @@ namespace Tests
         static readonly Guid SampleGuid = new Guid(SampleGuidString);
         const string SampleShortGuidString = "00amyWGct0y_ze4lIsj2Mw";
 
+        /// <summary>
+        /// "bullshitmustnotbevalid" in this case does produce a valid Guid, which when output encodes as correctly
+        /// as "bullshitmustnotbevaliQ".
+        /// </summary>
+        const string InvalidSampleShortGuidString = "bullshitmustnotbevalid";
+
         void assert_instance_equals_samples(ShortGuid instance)
         {
             Assert.Equal(SampleShortGuidString, instance.Value);
@@ -39,11 +45,10 @@ namespace Tests
         [Fact]
         void invalid_strings_must_not_return_true_on_try_parse_with_strict_true()
         {
-            var base64String = "bullshitmustnotbevalid";
-            Assert.True(ShortGuid.TryParse(base64String, out ShortGuid shortGuidA)); // strict defaults to false
-            Assert.False(ShortGuid.TryParse(base64String, out ShortGuid _, strict: true));
-            Assert.Throws<FormatException>(() => ShortGuid.Decode("bullshitmustnotbevalid", strict: true));
-            Guid guidA = ShortGuid.Decode("bullshitmustnotbevalid"); // does not throw an exception because strict defaults to false
+            Assert.True(ShortGuid.TryParse(InvalidSampleShortGuidString, out ShortGuid shortGuidA)); // strict defaults to false
+            Assert.False(ShortGuid.TryParse(InvalidSampleShortGuidString, out ShortGuid _, strict: true));
+            Assert.Throws<FormatException>(() => ShortGuid.Decode(InvalidSampleShortGuidString, strict: true));
+            Guid guidA = ShortGuid.Decode(InvalidSampleShortGuidString); // does not throw an exception because strict defaults to false
             Assert.Equal((Guid)shortGuidA, guidA);
         }
 
