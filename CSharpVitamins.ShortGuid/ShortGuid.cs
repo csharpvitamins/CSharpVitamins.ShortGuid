@@ -165,7 +165,7 @@ namespace CSharpVitamins
             if (!strict)
                 return guid;
 
-            var reencodedOutput = new ShortGuid(guid).Value;
+            var reencodedOutput = Encode(guid);
             if (reencodedOutput == value)
                 return guid;
 
