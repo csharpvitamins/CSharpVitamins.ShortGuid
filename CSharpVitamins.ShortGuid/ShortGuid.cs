@@ -10,6 +10,18 @@ namespace CSharpVitamins
     /// <remarks>
     /// What is URL-safe Base64? That's just a Base64 string with well known special characters replaced (/, +)
     /// or removed (==).
+    ///
+    /// <para>NB: As of version 2.0.0, <see cref="ShortGuid.Decode(string)"/> performs a sanity check when decoding
+    /// strings to ensure they haven't been tampered with, i.e. allowing the end of a Base64 string to be tweaked
+    /// where it still produces that same byte array to create the underlying Guid. Effectively there is "unused
+    /// space" in the Base64 string which is ignored, but will now result in an <see cref="FormatException"/> being
+    /// thrown.</para>
+    ///
+    /// <para>ShortGuid will never produce an invalid string, however if one is supplied it, could result in an
+    /// unintended collision where multiple URL-safe Base64 strings can point to the same Guid. To avoid this
+    /// uncertainty, a round-trip check is performed to ensure a 1-1 match with the input string.</para>
+    ///
+    /// <para>Stick with version 1.1.0 if you require the old behaviour with opt-in strict parsing.</para>
     /// </remarks>
     [DebuggerDisplay("{Value}")]
     public struct ShortGuid
