@@ -27,12 +27,33 @@ namespace CSharpVitamins
         /// Creates a new instance with the given URL-safe Base64 encoded string.
         /// <para>See also <seealso cref="ShortGuid.TryParse(string, out ShortGuid)"/> which will try to coerce the
         /// the value from URL-safe Base64 or normal Guid string.</para>
+        /// 
+        /// <para>NB: This method does not check if the result Guid is strictly correct. It accepts any Base64 encoded
+        /// string, allowing a) longer strings to be parsed where the remaining data is ignored and b) the end of a
+        /// Base64 string to be tweaked where it still produces that same byte array to create the underlying Guid.
+        /// Effectively there is "unused space" in the Base64 string which is ignored.
+        /// </para>
+        /// <para>See the strict version of this method which ensures the value being passed in is valid. Strict decoding
+        /// will be on by default from version 2+.</para>
         /// </summary>
         /// <param name="value">A ShortGuid encoded string e.g. URL-safe Base64.</param>
         public ShortGuid(string value)
         {
             encodedString = value;
             underlyingGuid = Decode(value);
+        }
+
+        /// <summary>
+        /// Creates a new instance with the given URL-safe Base64 encoded string.
+        /// <para>See also <seealso cref="ShortGuid.TryParse(string, out ShortGuid)"/> which will try to coerce the
+        /// the value from URL-safe Base64 or normal Guid string.</para>
+        /// </summary>
+        /// <param name="value">A ShortGuid encoded string e.g. URL-safe Base64.</param>
+        /// /// <param name="strict">If true the re-encoded result has to exactly match the input <paramref name="value"/>; if false any valid base64 string will be accepted.</param>
+        public ShortGuid(string value, bool strict)
+        {
+            encodedString = value;
+            underlyingGuid = Decode(value, strict);
         }
 
         /// <summary>
