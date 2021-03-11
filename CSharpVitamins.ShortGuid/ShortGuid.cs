@@ -82,7 +82,7 @@ namespace CSharpVitamins
             if (obj is string str)
             {
                 // Try a ShortGuid string.
-                if (TryDecode(str, out guid))
+                if (TryDecode(str, out guid, strict: false))
                     return underlyingGuid.Equals(guid);
 
                 // Try a guid string.
@@ -136,13 +136,24 @@ namespace CSharpVitamins
 
         /// <summary>
         /// Decodes the given value to a <see cref="System.Guid"/>.
-        /// <para>See also <seealso cref="TryDecode(string, out Guid, bool)"/> or <seealso cref="TryParse(string, out Guid)"/>.</para>
+        /// <para>See also <seealso cref="TryDecode(string, out Guid)"/> or <seealso cref="TryParse(string, out Guid)"/>.</para>
+        /// </summary>
+        /// <param name="value">The ShortGuid encoded string to decode.</param>
+        /// <returns>A new <see cref="System.Guid"/> instance from the parsed string.</returns>
+        public static Guid Decode(string value)
+        {
+            return Decode(value, strict: false);
+        }
+
+        /// <summary>
+        /// Decodes the given value to a <see cref="System.Guid"/>.
+        /// <para>See also <seealso cref="TryDecode(string, out Guid, bool)"/> or <seealso cref="TryParse(string, out Guid, bool)"/>.</para>
         /// </summary>
         /// <param name="value">The ShortGuid encoded string to decode.</param>
         /// <param name="strict">If true the re-encoded result has to exactly match the input <paramref name="value"/>; if false any valid base64 string will be accepted.</param>
         /// <returns>A new <see cref="System.Guid"/> instance from the parsed string.</returns>
         /// <exception cref="FormatException">If <paramref name="value"/> is no valid base64 string (<seealso cref="Convert.FromBase64String(string)"/>) or if the <paramref name="strict"/> flag is set and the re-encoded output doesn't match <paramref name="value"/>.</exception>
-        public static Guid Decode(string value, bool strict = false)
+        public static Guid Decode(string value, bool strict)
         {
             value = value
                 .Replace("_", "/")
@@ -150,16 +161,42 @@ namespace CSharpVitamins
 
             byte[] blob = Convert.FromBase64String(value + "==");
             var guid = new Guid(blob);
+
             if (!strict)
-            {
                 return guid;
-            }
+
             var reencodedOutput = new ShortGuid(guid).Value;
             if (reencodedOutput == value)
-            {
                 return guid;
-            }
+
             throw new FormatException($"The string '{value}' is a valid base64 string but doesn't match the re-encoded {nameof(ShortGuid)} '{reencodedOutput}'.");
+        }
+
+        /// <summary>
+        /// Attempts to decode the given value to a <see cref="System.Guid"/>.
+        ///
+        /// <para>The difference between TryParse and TryDecode:</para>
+        /// <list type="number">
+        ///     <item>
+        ///         <term><see cref="TryParse(string, out ShortGuid)"/></term>
+        ///         <description>Tries to parse as a <see cref="ShortGuid"/> before attempting parsing as a <see cref="System.Guid"/>, outputs the actual <see cref="ShortGuid"/> instance.</description>
+        ///     </item>
+        ///     <item>
+        ///         <term><see cref="TryParse(string, out Guid)"/></term>
+        ///         <description>Tries to parse as a <see cref="ShortGuid"/> before attempting parsing as a <see cref="System.Guid"/>, outputs the underlying <see cref="System.Guid"/>.</description>
+        ///     </item>
+        ///     <item>
+        ///         <term><see cref="TryDecode(string, out Guid)"/></term>
+        ///         <description>Tries to parse as a <see cref="ShortGuid"/> only, but outputs the result as a <see cref="System.Guid"/> - this method.</description>
+        ///     </item>
+        /// </list>
+        /// </summary>
+        /// <param name="value">The ShortGuid encoded string to decode.</param>
+        /// <param name="guid">A new <see cref="System.Guid"/> instance from the parsed string.</param>
+        /// <returns>A boolean indicating if the decode was successful.</returns>
+        public static bool TryDecode(string value, out Guid guid)
+        {
+            return TryDecode(value, out guid, strict: false);
         }
 
         /// <summary>
@@ -185,7 +222,7 @@ namespace CSharpVitamins
         /// <param name="guid">A new <see cref="System.Guid"/> instance from the parsed string.</param>
         /// <param name="strict">If true the re-encoded result has to exactly match the input <paramref name="value"/>; if false any valid base64 string will be accepted.</param>
         /// <returns>A boolean indicating if the decode was successful.</returns>
-        public static bool TryDecode(string value, out Guid guid, bool strict = false)
+        public static bool TryDecode(string value, out Guid guid, bool strict)
         {
             try
             {
@@ -279,7 +316,34 @@ namespace CSharpVitamins
             return new ShortGuid(guid);
         }
 
-        #endregion Operators
+        #endregion
+
+        /// <summary>
+        /// Tries to parse the value as a <see cref="ShortGuid"/> or <see cref="System.Guid"/> string, and outputs an actual <see cref="ShortGuid"/> instance.
+        ///
+        /// <para>The difference between TryParse and TryDecode:</para>
+        /// <list type="number">
+        ///     <item>
+        ///         <term><see cref="TryParse(string, out ShortGuid)"/></term>
+        ///         <description>Tries to parse as a <see cref="ShortGuid"/> before attempting parsing as a <see cref="System.Guid"/>, outputs the actual <see cref="ShortGuid"/> instance - this method.</description>
+        ///     </item>
+        ///     <item>
+        ///         <term><see cref="TryParse(string, out Guid)"/></term>
+        ///         <description>Tries to parse as a <see cref="ShortGuid"/> before attempting parsing as a <see cref="System.Guid"/>, outputs the underlying <see cref="System.Guid"/>.</description>
+        ///     </item>
+        ///     <item>
+        ///         <term><see cref="TryDecode(string, out Guid)"/></term>
+        ///         <description>Tries to parse as a <see cref="ShortGuid"/> only, but outputs the result as a <see cref="System.Guid"/>.</description>
+        ///     </item>
+        /// </list>
+        /// </summary>
+        /// <param name="value">The ShortGuid encoded string or string representation of a Guid.</param>
+        /// <param name="shortGuid">A new <see cref="ShortGuid"/> instance from the parsed string.</param>
+        /// <returns>A boolean indicating if the parse was successful.</returns>
+        public static bool TryParse(string value, out ShortGuid shortGuid)
+        {
+            return TryParse(value, out shortGuid, strict: false);
+        }
 
         /// <summary>
         /// Tries to parse the value as a <see cref="ShortGuid"/> or <see cref="System.Guid"/> string, and outputs an actual <see cref="ShortGuid"/> instance.
@@ -304,7 +368,7 @@ namespace CSharpVitamins
         /// <param name="shortGuid">A new <see cref="ShortGuid"/> instance from the parsed string.</param>
         /// <param name="strict">If true the re-encoded result has to exactly match the input <paramref name="value"/>; if false any valid base64 string will be accepted.</param>
         /// <returns>A boolean indicating if the parse was successful.</returns>
-        public static bool TryParse(string value, out ShortGuid shortGuid, bool strict = false)
+        public static bool TryParse(string value, out ShortGuid shortGuid, bool strict)
         {
             // Try a ShortGuid string.
             if (ShortGuid.TryDecode(value, out var guid, strict))
@@ -330,6 +394,33 @@ namespace CSharpVitamins
         /// <para>The difference between TryParse and TryDecode:</para>
         /// <list type="number">
         ///     <item>
+        ///         <term><see cref="TryParse(string, out ShortGuid)"/></term>
+        ///         <description>Tries to parse as a <see cref="ShortGuid"/> before attempting parsing as a <see cref="System.Guid"/>, outputs the actual <see cref="ShortGuid"/> instance.</description>
+        ///     </item>
+        ///     <item>
+        ///         <term><see cref="TryParse(string, out Guid)"/></term>
+        ///         <description>Tries to parse as a <see cref="ShortGuid"/> before attempting parsing as a <see cref="System.Guid"/>, outputs the underlying <see cref="System.Guid"/> - this method.</description>
+        ///     </item>
+        ///     <item>
+        ///         <term><see cref="TryDecode(string, out Guid)"/></term>
+        ///         <description>Tries to parse as a <see cref="ShortGuid"/> only, but outputs the result as a <see cref="System.Guid"/>.</description>
+        ///     </item>
+        /// </list>
+        /// </summary>
+        /// <param name="value">The ShortGuid encoded string or string representation of a Guid.</param>
+        /// <param name="guid">A new <see cref="System.Guid"/> instance from the parsed string.</param>
+        /// <returns>A boolean indicating if the parse was successful.</returns>
+        public static bool TryParse(string value, out Guid guid)
+        {
+            return TryParse(value, out guid, strict: false);
+        }
+
+        /// <summary>
+        /// Tries to parse the value as a <see cref="ShortGuid"/> or <see cref="System.Guid"/> string, and outputs the underlying <see cref="Guid"/> value.
+        ///
+        /// <para>The difference between TryParse and TryDecode:</para>
+        /// <list type="number">
+        ///     <item>
         ///         <term><see cref="TryParse(string, out ShortGuid, bool)"/></term>
         ///         <description>Tries to parse as a <see cref="ShortGuid"/> before attempting parsing as a <see cref="System.Guid"/>, outputs the actual <see cref="ShortGuid"/> instance.</description>
         ///     </item>
@@ -347,7 +438,7 @@ namespace CSharpVitamins
         /// <param name="guid">A new <see cref="System.Guid"/> instance from the parsed string.</param>
         /// <param name="strict">If true the re-encoded result has to exactly match the input <paramref name="value"/>; if false any valid base64 string will be accepted.</param>
         /// <returns>A boolean indicating if the parse was successful.</returns>
-        public static bool TryParse(string value, out Guid guid, bool strict = false)
+        public static bool TryParse(string value, out Guid guid, bool strict)
         {
             // Try a ShortGuid string.
             if (ShortGuid.TryDecode(value, out guid, strict))
