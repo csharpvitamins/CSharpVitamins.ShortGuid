@@ -1,5 +1,9 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace CSharpVitamins
 {
@@ -24,7 +28,9 @@ namespace CSharpVitamins
     /// <para>Stick with version 1.1.0 if you require the old behaviour with opt-in strict parsing.</para>
     /// </remarks>
     [DebuggerDisplay("{Value}")]
-    public struct ShortGuid
+    [JsonConverter(typeof(ShortGuidJsonConverter))]
+    [TypeConverter(typeof(ShortGuidTypeConverter))]
+    public struct ShortGuid : IComparable<ShortGuid>, IEquatable<ShortGuid>
     {
         /// <summary>
         /// A read-only instance of the ShortGuid struct whose value is guaranteed to be all zeroes i.e. equivalent
@@ -323,6 +329,20 @@ namespace CSharpVitamins
             return false;
         }
 
+        /// <summary>
+        /// IEquatable implementation
+        /// </summary>
+        /// <param name="other">Incoming ShortGuid to check equality against</param>
+        /// <returns></returns>
+        public bool Equals(ShortGuid other) => this.Value.Equals(other.Value);
+
+        /// <summary>
+        /// IComparable implementation
+        /// </summary>
+        /// <param name="other">Incoming ShortGuid to compare to</param>
+        /// <returns></returns>
+        public int CompareTo(ShortGuid other) => Value.CompareTo(other.Value);
+
         #region Operators
 
         /// <summary>
@@ -404,5 +424,27 @@ namespace CSharpVitamins
         }
 
         #endregion
+    }
+
+    sealed class ShortGuidJsonConverter : JsonConverter<ShortGuid>
+    {
+        public override ShortGuid Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => reader.GetString() ?? new ShortGuid(reader.GetString());
+
+        public override void Write(Utf8JsonWriter writer, ShortGuid value, JsonSerializerOptions options) => writer.WriteStringValue(value.Value);
+    }
+    sealed class ShortGuidTypeConverter : TypeConverter
+    {
+        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        {
+            return sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
+        }
+        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        {
+            var stringValue = value as string;
+            if (!string.IsNullOrEmpty(stringValue))
+                return new ShortGuid(stringValue);
+
+            return base.ConvertFrom(context, culture, value);
+        }
     }
 }

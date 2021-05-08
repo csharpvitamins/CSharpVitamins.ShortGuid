@@ -1,54 +1,61 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net40</TargetFrameworks>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <RootNamespace>CSharpVitamins</RootNamespace>
-    <Authors>Dave Transom</Authors>
-    <Company>CSharpVitamins</Company>
-    <Description>
-A convenience wrapper struct for dealing with URL-safe Base64 encoded globally unique identifiers (GUID), making a shorter string value (22 vs 36 characters long).
+	<PropertyGroup>
+		<TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<RootNamespace>CSharpVitamins</RootNamespace>
+		<Authors>Dave Transom</Authors>
+		<Company>CSharpVitamins</Company>
+		<Description>
+			A convenience wrapper struct for dealing with URL-safe Base64 encoded globally unique identifiers (GUID), making a shorter string value (22 vs 36 characters long).
 
-As of version 2.0.0, `ShortGuid` performs a sanity check when decoding strings to ensure they haven't been tampered with, i.e. allowing the end of a Base64 string to be tweaked where it still produces that same byte array to create the underlying Guid. Effectively there is "unused space" in the Base64 string which is ignored, but will now result in an `FormatException` being thrown.
+			As of version 2.0.0, `ShortGuid` performs a sanity check when decoding strings to ensure they haven't been tampered with, i.e. allowing the end of a Base64 string to be tweaked where it still produces that same byte array to create the underlying Guid. Effectively there is "unused space" in the Base64 string which is ignored, but will now result in an `FormatException` being thrown.
 
-ShortGuid will never produce an invalid string, however if one is supplied, it could result in an unintended collision where multiple URL-safe Base64 strings can point to the same Guid. To avoid this uncertainty, a round-trip check is performed to ensure a 1-1 match with the input string.
+			ShortGuid will never produce an invalid string, however if one is supplied, it could result in an unintended collision where multiple URL-safe Base64 strings can point to the same Guid. To avoid this uncertainty, a round-trip check is performed to ensure a 1-1 match with the input string.
 
-Stick with version 1.1.0 if you require the old behaviour with opt-in strict parsing.
-    </Description>
-    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
-    <PackageProjectUrl>https://github.com/csharpvitamins/csharpvitamins.shortguid/</PackageProjectUrl>
-    <PackageLicenseExpression></PackageLicenseExpression>
-    <RepositoryUrl>https://github.com/csharpvitamins/csharpvitamins.shortguid/</RepositoryUrl>
-    <PackageTags>Guid ShortGuid Identifiers Base64 CSharpVitamins</PackageTags>
-    <PackageReleaseNotes>
-- 2.0.0 Strict is now always on.
-        Reduces surface area that exposed `strict` parsing options.
-        Stick with `v1.1.0` if you require the loose form of decoding.
+			Stick with version 1.1.0 if you require the old behaviour with opt-in strict parsing.
+		</Description>
+		<PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+		<PackageProjectUrl>https://github.com/csharpvitamins/csharpvitamins.shortguid/</PackageProjectUrl>
+		<PackageLicenseExpression></PackageLicenseExpression>
+		<RepositoryUrl>https://github.com/csharpvitamins/csharpvitamins.shortguid/</RepositoryUrl>
+		<PackageTags>Guid ShortGuid Identifiers Base64 CSharpVitamins</PackageTags>
+		<PackageReleaseNotes>
+			- 2.0.0 Strict is now always on.
+			Reduces surface area that exposed `strict` parsing options.
+			Stick with `v1.1.0` if you require the loose form of decoding.
 
-- 1.1.0 Adds overloads for strict parsing to (Try)Decode/Parse methods. Default: strict=false for backwards compatibility.
-        Signals intent to move to strict only parsing in version 2+.
-- 1.0.3 Improves documentation.
-        Adds symbols package to enable SourceLink.
-- 1.0.2 Fix: Ambiguous use of `==` operator when comparing Guid and ShortGuid instances.
-- 1.0.1 Target netstandard2.0 and net40.
-- 1.0.0 Initial release.
-</PackageReleaseNotes>
-    <Copyright>Copyright 2007</Copyright>
-    <Version>2.0.0</Version>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-  </PropertyGroup>
+			- 1.1.0 Adds overloads for strict parsing to (Try)Decode/Parse methods. Default: strict=false for backwards compatibility.
+			Signals intent to move to strict only parsing in version 2+.
+			- 1.0.3 Improves documentation.
+			Adds symbols package to enable SourceLink.
+			- 1.0.2 Fix: Ambiguous use of `==` operator when comparing Guid and ShortGuid instances.
+			- 1.0.1 Target netstandard2.0 and net40.
+			- 1.0.0 Initial release.
+		</PackageReleaseNotes>
+		<Copyright>Copyright 2007</Copyright>
+		<Version>2.0.0</Version>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-  </ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+		<PackageReference Include="System.Text.Json" Version="[5.0.2,)" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\LICENSE.md">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\LICENSE.md">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
 
 </Project>
