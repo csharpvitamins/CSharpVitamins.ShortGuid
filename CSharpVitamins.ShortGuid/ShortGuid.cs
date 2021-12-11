@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
+#if !NET40
+using gfoidl.Base64;
+#endif
 
 namespace CSharpVitamins
 {
@@ -139,6 +142,7 @@ namespace CSharpVitamins
         /// <returns>A 22 character ShortGuid URL-safe Base64 string.</returns>
         public static string Encode(Guid guid)
         {
+#if NET40
             string encoded = Convert.ToBase64String(guid.ToByteArray());
 
             encoded = encoded
@@ -146,6 +150,9 @@ namespace CSharpVitamins
                 .Replace("+", "-");
 
             return encoded.Substring(0, 22);
+#else
+            return Base64.Url.Encode(guid.ToByteArray());
+#endif
         }
 
         /// <summary>
@@ -170,11 +177,15 @@ namespace CSharpVitamins
                 );
             }
 
+#if NET40
             string base64 = value
                 .Replace("_", "/")
                 .Replace("-", "+") + "==";
 
             byte[] blob = Convert.FromBase64String(base64);
+#else
+            byte[] blob = Base64.Url.Decode(value.AsSpan());
+#endif
             var guid = new Guid(blob);
 
             var sanityCheck = Encode(guid);
